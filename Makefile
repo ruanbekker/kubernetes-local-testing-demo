@@ -5,6 +5,9 @@ help: ## This help.
 
 .DEFAULT_GOAL := help
 
+install-k3d: ## Installs k3d from Rancher
+	curl -s https://raw.githubusercontent.com/rancher/k3d/master/install.sh | bash
+
 provision-kubernetes: ## Deploys a kubernetes cluster with k3d
 	k3d create --name="demo" --workers="2" --publish="8000:80"
-  export KUBECONFIG="$(k3d get-kubeconfig --name='demo')"
+	export KUBECONFIG="$(k3d get-kubeconfig --name='demo')"
