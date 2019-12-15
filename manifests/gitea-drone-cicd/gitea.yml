@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitea
+spec:
+  ports:
+  - name: gitea
+    port: 3000
+    targetPort: 3000
+  selector:
+    app: gitea
+  clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitea-ssh
+spec:
+  ports:
+  - name: gitea-ssh
+    port: 2222
+    targetPort: 22
+  selector:
+    app: gitea
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  labels:
+    app: gitea
+spec:
+  selector:
+    matchLabels:
+      app: gitea
+      tier: gitea
+  strategy:
+    #type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: gitea
+        tier: gitea
+    spec:
+      containers:
+      - image: gitea/gitea:1.8.1
+        name: gitea
+        env:
+        - name: APP_NAME
+          value: "Gitea"
+        - name: USER_UID
+          value: "1000"
+        - name: USER_GID
+          value: "1000"
+        - name: ROOT_URL
+          value: "https://gitea.localhost"
+        - name: SSH_DOMAIN
+          value: "gitea.localhost"
+        - name: SSH_PORT
+          value: "2222"
+        - name: HTTP_PORT
+          value: "3000"
+        - name: DB_TYPE
+          value: "postgres"
+        - name: DB_HOST
+          value: "postgres:5432"
+        - name: DB_NAME
+          value: "gitea"
+        - name: DB_USER
+          value: "postgres"
+        - name: DB_PASSWD
+          value: "QRRgxWTzaSPSvWMk"
+        ports:
+        - containerPort: 3000
+          name: gitea
+        - containerPort: 2222
+          name: gitea-ssh
