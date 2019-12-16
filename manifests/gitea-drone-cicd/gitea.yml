@@ -58,7 +58,7 @@ spec:
         - name: USER_GID
           value: "1000"
         - name: ROOT_URL
-          value: "https://gitea.localhost"
+          value: "http://gitea.localhost:8000"
         - name: SSH_DOMAIN
           value: "gitea.localhost"
         - name: SSH_PORT
