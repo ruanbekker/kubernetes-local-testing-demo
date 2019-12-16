@@ -11,3 +11,9 @@ install-k3d: ## Installs k3d from Rancher
 provision-kubernetes: ## Deploys a kubernetes cluster with k3d
 	k3d create --name="demo" --workers="2" --publish="8000:80"
 	export KUBECONFIG="$(k3d get-kubeconfig --name='demo')"
+
+pull: ## Pulls docker images
+	docker pull postgres:11.5
+	docker pull gitea/gitea:1.8.1
+	docker pull drone/drone:1
+	docker pull drone/agent:1
